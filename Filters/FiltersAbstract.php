@@ -91,7 +91,19 @@ abstract class FiltersAbstract
      */
     protected function filterFilters()
     {
-        return array_filter(Arr::only($this->properties, array_keys($this->filters)));
+        $keys = array_keys($this->filters);
+
+        // Remove items with null values
+        $filters = array_filter(Arr::only($this->properties, $keys));
+
+        // Filters the keys that are defined
+        $orderedKeys = array_filter($keys, function ($key) use ($filters) {
+            return in_array($key, array_keys($filters));
+        });
+
+        // Sort by the defined order
+        return array_merge(array_flip($orderedKeys), $filters);
+        
     }
 
     /**
