@@ -1,0 +1,26 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Filters\FiltersAbstract;
+
+class DummyClass extends FiltersAbstract
+{
+    /**
+     * Array of list of filters mappings
+     *
+     * @var array
+     */
+    protected $filters = [
+    ];
+
+    /**
+     * returns the items to filter with select
+     *
+     * @return array
+     */
+    public static function mappings()
+    {
+        return [];
+    }
+}

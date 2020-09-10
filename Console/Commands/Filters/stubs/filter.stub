@@ -1,0 +1,40 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Filters\FilterAbstract;
+use Illuminate\Database\Eloquent\Builder;
+
+class DummyClass extends FilterAbstract
+{
+
+    /**
+     * Map the params to ensure that only the filterable values are passed.
+     *
+     * @return array
+     */
+    public function mappings()
+    {
+        return [];
+    }
+
+    /**
+     * Filter by value as argument and return the builder
+     *
+     * @param Builder $builder
+     * @param mixed $value
+     *
+     * @return Builder
+     */
+    public function filter(Builder $builder, $value)
+    {
+        // Ensure the value is filterable
+        if (is_null($value = $this->resolveFilterValue($value))) {
+            return $builder;
+        }
+
+        // your filters here
+
+        return $builder;
+    }
+}
