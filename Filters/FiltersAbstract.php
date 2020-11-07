@@ -108,22 +108,41 @@ abstract class FiltersAbstract
 
     /**
      * Set properties to filter.
-     *
-     * @param array $properties
      */
-    protected function setProperties(array $properties = [])
-    {
-        $properties = empty($properties) ? request()->all() : $properties;
-
-        $properties = collect($properties)
-            ->flatMap(function ($value, $key) {
-                $key = Str::kebab(Str::camel($key));
-                $value = is_bool($value) ? \json_encode($value) : $value;
-
-                return [$key => $value];
-            })
-            ->toArray();
-
-        $this->properties = $properties;
-    }
+     protected function setProperties(array $properties = [])
+     {
+         $properties = empty($properties) ? request()->all() : $properties;
+ 
+         $properties = collect($properties)
+             ->flatMap(function ($value, $key) {
+                 $key = Str::kebab(Str::camel($key));
+                 $value = $this->encodeValue($value);
+ 
+                 return [$key => $value];
+             })
+             ->toArray();
+ 
+         $this->properties = $properties;
+     }
+ 
+     /**
+      * Format the value according to the type.
+      *
+      * @param mixed $value
+      */
+     protected function encodeValue($value)
+     {
+         if ($value instanceof Model) {
+             return [
+                 'type' => get_class($value),
+                 'id' => $value->id,
+             ];
+         }
+ 
+         if (is_bool($value)) {
+             return json_encode($value);
+         }
+ 
+         return $value;
+     }
 }
